@@ -10,6 +10,8 @@ use windows::Win32::UI::WindowsAndMessaging::{
 
 static HELD: Mutex<BTreeSet<u32>> = Mutex::new(BTreeSet::new());
 
+const MAX_SIMULTANEOUS_KEYS: usize = 4;
+
 unsafe extern "system" fn hook_proc(code: i32, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
     if code >= 0 {
         let kb = unsafe { &*(lparam.0 as *const KBDLLHOOKSTRUCT) };
@@ -18,7 +20,7 @@ unsafe extern "system" fn hook_proc(code: i32, wparam: WPARAM, lparam: LPARAM) -
 
         match wparam.0 as u32 {
             WM_KEYDOWN | WM_SYSKEYDOWN => {
-                if held.insert(kb.vkCode) {
+                if held.len() < MAX_SIMULTANEOUS_KEYS && held.insert(kb.vkCode) {
                     let line = held
                         .iter()
                         .map(u32::to_string)
