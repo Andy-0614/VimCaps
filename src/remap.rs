@@ -18,22 +18,21 @@ pub fn lookup(held: &BTreeSet<u32>) -> Option<(&'static [u32], &'static [u32])> 
 // 觸發組合 (左欄，最多 4 鍵) -> 依序執行的最多 4 段輸出 (右欄)，每段本身也是最多 4 鍵的組合
 // 每段都是「這段的鍵全部按下 -> 這段的鍵全部放開」才換下一段，觸發當下一次性送完，不受觸發鍵放開時間影響
 pub const MACRO_TABLE: &[(&[u32], &[&[u32]])] = &[
-    (&[0x14], &[&[0x1B]]),                     // CapsLock -> Esc
-    (&[0x14, 0x49], &[&[0x1B], &[0x49]]),      // CapsLock + i -> Esc, i
-    (&[0x14, 0x43], &[&[0x1B], &[0x59]]),      // CapsLock + c -> Esc, y (yank/copy)
-    (&[0x14, 0x56], &[&[0x1B], &[0x50]]),      // CapsLock + v -> Esc, p (paste)
-    (&[0x14, 0x52], &[&[0x1B], &[0x55]]),      // CapsLock + r -> Esc, u (undo)
-    (&[0x14, 0x55], &[&[0x1B], &[0xA2, 0x52]]), // CapsLock + u -> Esc, Ctrl+r (redo)
-    (&[0x14, 0xBA], &[&[0x1B], &[0xA0, 0xBA]]), // CapsLock + ; -> Esc, :
-    (&[0x14, 0x46], &[&[0x1B], &[0xBF]]),      // CapsLock + f -> Esc, /
-    (
-        &[0x14, 0x48],
-        &[&[0x1B], &[0xA0, 0xBA], &[0xA0, 0x35], &[0x53], &[0xBF]], // Esc, :, %, s, /
-    ), // CapsLock + h -> Esc, :%s/
+    (&[0x14], &[&[0x1B]]),                     // CapsLock -> Esc (Normal)
+    (&[0x14, 0x49], &[&[0x1B], &[0x49]]),      // CapsLock + i -> Esc, i (Edit)
+    (&[0x14, 0x56], &[&[0x1B], &[0x56]]),      // CapsLock + v -> Esc, v (vis)
+    (&[0x14, 0x52], &[&[0x1B], &[0x52]]),      // CapsLock + r -> Esc, r (redo)
+    (&[0x14, 0x55], &[&[0x1B], &[0x55]]),      // CapsLock + u -> Esc, u (undo)
+    (&[0x14, 0xBA], &[&[0x1B], &[0xA0, 0xBA]]), // CapsLock + ; -> Esc, : (command)
+    (&[0x14, 0x46], &[&[0x1B], &[0xBF]]),      // CapsLock + f -> Esc, / (found)
     (
         &[0x14, 0x53],
         &[&[0x1B], &[0xA0, 0xBA], &[0x57], &[0x51], &[0xA0, 0x31]], // Esc, :, w, q, !
-    ), // CapsLock + s -> Esc, :wq!
+    ), // CapsLock + s -> Esc, :, w, q, !
+    (
+        &[0x14, 0x48],
+        &[&[0x1B], &[0xA0, 0xBA], &[0xA0, 0x35], &[0x53], &[0xBF]], // Esc, :, %, s, /
+    ), // CapsLock + h -> Esc, :, %, s, /
 ];
 
 pub fn lookup_macro(held: &BTreeSet<u32>) -> Option<&'static [&'static [u32]]> {

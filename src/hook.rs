@@ -39,16 +39,9 @@ pub unsafe extern "system" fn hook_proc(code: i32, wparam: WPARAM, lparam: LPARA
                 let capslock_held = held.contains(&VK_CAPITAL);
                 let intercept = kb.vkCode == VK_CAPITAL || capslock_held;
 
-                // 限制同時按鍵最多 4 個，並打印目前按下的 keycode 組合
+                // 限制同時按鍵最多 4 個
                 if held.len() < MAX_SIMULTANEOUS_KEYS && held.insert(kb.vkCode) {
                     CURRENT_STAGE.lock().unwrap().insert(kb.vkCode);
-
-                    let line = held
-                        .iter()
-                        .map(u32::to_string)
-                        .collect::<Vec<_>>()
-                        .join(" + ");
-                    println!("{line}");
 
                     // 這一鍵剛好讓整組符合表中的組合，才觸發一次性依序執行多段 macro（跟按住多久無關）
                     if let Some(stages) = remap::lookup_macro(&held) {
