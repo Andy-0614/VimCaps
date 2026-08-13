@@ -21,8 +21,8 @@ pub const MACRO_TABLE: &[(&[u32], &[&[u32]])] = &[
     (&[0x14], &[&[0x1B]]),                     // CapsLock -> Esc (Normal)
     (&[0x14, 0x49], &[&[0x1B], &[0x49]]),      // CapsLock + i -> Esc, i (Edit)
     (&[0x14, 0x56], &[&[0x1B], &[0x56]]),      // CapsLock + v -> Esc, v (vis)
-    (&[0x14, 0x52], &[&[0x1B], &[0x52]]),      // CapsLock + r -> Esc, r (redo)
-    (&[0x14, 0x55], &[&[0x1B], &[0x55]]),      // CapsLock + u -> Esc, u (undo)
+    (&[0x14, 0x52], &[&[0x1B], &[0x55]]),      // CapsLock + r -> Esc, u (undo)
+    (&[0x14, 0x55], &[&[0x1B], &[0xA2, 0x52]]), // CapsLock + u -> Esc, ctrl + r (redo)
     (&[0x14, 0xBA], &[&[0x1B], &[0xA0, 0xBA]]), // CapsLock + ; -> Esc, : (command)
     (&[0x14, 0x46], &[&[0x1B], &[0xBF]]),      // CapsLock + f -> Esc, / (found)
     (
