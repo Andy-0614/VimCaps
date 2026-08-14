@@ -1,0 +1,42 @@
+# yourStep.md — 依 myStep.md 整理的執行清單
+
+做完一項就把該項的 `[ ]` 改成 `[x]`。
+
+- [x] 1. 不要安裝檔，直接是執行檔
+  - [x] `tauri.conf.json` 關掉 `bundle.active`，build 只留編譯產物（.exe），不產生安裝檔
+- [ ] 2. 修好縮放／捲動問題
+  - [x] `tauri.conf.json` 開啟 `resizable`，設合理的 `minWidth`/`minHeight`，調整預設視窗大小
+  - [x] `style.css` 拆開「圓角裁切」跟「內容捲動」：外層負責裁圓角，`main` 內層自己 `overflow-y: auto`
+- [x] 3. UI 改成「組合鍵 -> 組合鍵 -> ... -> 為了什麼」格式
+  - [x] `main.js` 用 JS 陣列描述 9 組 keymap，動態產生每一列（按鍵徽章用箭頭串起來，可換行，沒有說明就留空）
+  - [x] `index.html` 拿掉手寫的兩張分類卡片，改成單一容器讓 JS 填內容，順序照 `key.md`
+  - [x] `style.css` 新增徽章／箭頭／換行排版的樣式
+- [x] 4. 保留現有深色主題配色，只調整佈局與可用性
+  - [x] 確認上面三項改完後，主題色（`--theme` #1d1e20 等 CSS 變數）都沒被動到
+  - [x] `cargo check` 通過，沒有 warning
+  - [x] 視覺上確認可以捲動、可以拉大縮小（已完成，見下方第 5 項後改回不可縮放）
+- [x] 5. 一開始尺寸就要對，然後改回不能縮放
+  - [x] `tauri.conf.json`：`resizable` 改回 `false`，拿掉沒用的 `minWidth`/`minHeight`，把預設尺寸抓到剛好能放下全部 9 列不用捲動（480×600，`overflow-y:auto` 保留當保險，正常不會出現捲軸）
+- [x] 6. 箭頭改成真的箭頭符號，UI 再優化
+  - [x] `main.js`：`"->"` 文字改成真的箭頭符號（→）
+  - [x] `style.css`：箭頭用強調色 `--accent` 加粗放大、trigger 徽章加一圈淡淡的強調色光暈、列加上滑鼠 hover 的淡淡底色、`cargo check` 確認沒改壞
+- [x] 7. 按鍵徽章統一藍框、視窗邊框再明顯一點、`()` 說明文字不能自己斷到下一行
+  - [x] `style.css`：所有 `.pill`（不只 trigger）都用一致的藍色邊框樣式，`.trigger` 特例拿掉
+  - [x] `style.css`：視窗外框（`body` 的 `border`）從 1px 加粗到 2px
+  - [x] `main.js`：新增 `.step` 包裝，每段「箭頭 + 按鍵」（最後一段還帶 `()` 說明）包成一個不可拆的區塊，換行只會整段一起換
+  - [x] `cargo check` 確認沒改壞
+- [x] 8. 截圖回報：save/replace 那兩列最後一段還是掉到下一行，而且出現捲軸，要加寬視窗
+  - [x] `tauri.conf.json`：視窗寬度從 480 加大到 640，讓最長的兩列（save/replace，6 段 + 說明）整條擠在同一行，不再換行
+  - [x] 寬度夠了之後，內容高度會小於視窗高度，捲軸自然不會再出現（不用額外處理）
+  - [x] `cargo check` 確認沒改壞
+- [x] 9. 送出的按鍵真的是大寫才顯示大寫，不然要顯示小寫
+  - [x] 對照 `remap.rs` 確認 `0x49/0x56/0x55/0x57/0x51/0x53`（i/v/u/w/q/s）都沒帶 Shift，`main.js` 的 `KEYMAP.chain` 全部改小寫；觸發鍵（trigger）跟 `Ctrl + R` 這種快捷鍵標籤維持大寫慣例（那是「按哪個實體鍵」的標示，不是送出的字元）
+- [x] 10. 每列改成三行：觸發鍵／解釋（放中間）／按鍵鏈，說明文字寫完整、中文化（`vis` -> 視覺模式）
+  - [x] `main.js`：`KEYMAP.purpose` 全部改成完整中文說明（正常模式／編輯模式／視覺模式／復原／重做／命令列模式／尋找／儲存並離開／全域取代）
+  - [x] `main.js`：render 改成三行結構（觸發鍵一行、purpose 一行置中當標題、chain 一行）
+  - [x] `style.css`：`.chain-row` 改成直向排列，purpose 那行加大字級當標題，順便拿掉沒用到的 `.purpose` 樣式
+  - [x] `tauri.conf.json`：寬度從 640 縮回 440，高度從 600 拉高到 820（三行後每列變高，需要更多垂直空間）
+  - [x] `cargo check` 確認沒改壞
+- [x] 11. 高度不用硬撐到全部塞下，反正有捲動，縮回合理高度
+  - [x] `tauri.conf.json`：高度從 820 縮回 600，不用勉強塞下全部 9 列，反正可以捲動
+  - [x] `cargo check` 確認沒改壞
